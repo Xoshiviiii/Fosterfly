@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday My Love</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0d0914;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.12);
+            --accent-pink: #ff758c;
+            --accent-glow: rgba(255, 117, 140, 0.5);
+            --text-main: #f8f9fa;
+            --text-sub: #d1d5db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 15px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient background glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 480px;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            color: var(--accent-pink);
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Timeline Navigation Dots */
+        .nav-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--accent-pink);
+            box-shadow: 0 0 10px var(--accent-pink);
+            transform: scale(1.2);
+        }
+
+        /* Cards */
+        .card-stage {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 28px 22px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .card-stage.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(255, 117, 140, 0.15);
+            color: var(--accent-pink);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .card-text {
+            color: var(--text-sub);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+            white-space: pre-line;
+        }
+
+        .highlight {
+            color: var(--accent-pink);
+            font-weight: 500;
+        }
+
+        .signature {
+            text-align: right;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--accent-pink);
+            font-size: 1.1rem;
+            margin-top: 15px;
+        }
+
+        .final-quote {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--card-border);
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #ffffff;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-prev {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+        }
+
+        .btn-next {
+            background: var(--accent-pink);
+            color: #fff;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Floating Hearts Animation */
+        .heart {
+            position: fixed;
+            color: rgba(255, 117, 140, 0.3);
+            font-size: 1rem;
+            animation: float 6s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating hearts background -->
+    <div class="heart" style="left: 10%; animation-delay: 0s;">❤️</div>
+    <div class="heart" style="left: 30%; animation-delay: 2s;">✨</div>
+    <div class="heart" style="left: 70%; animation-delay: 1s;">❤️</div>
+    <div class="heart" style="left: 85%; animation-delay: 3s;">💖</div>
+
+    <div class="container">
+        <header>
+            <p>A Special Journey</p>
+            <h1>Happy Birthday, My Love</h1>
+        </header>
+
+        <div class="nav-dots">
+            <div class="dot active" id="dot1"></div>
+            <div class="dot" id="dot2"></div>
+            <div class="dot" id="dot3"></div>
+        </div>
+
+        <!-- STAGE 1 -->
+        <div class="card-stage active" id="stage1">
+            <span class="tag">Stage 01 • The Beginning</span>
+            <h2 class="card-title">The Train</h2>
+            <div class="card-text">
+                We met on a train for the very first time on <span class="highlight">28th April 2024</span>—a date I will hold close to my heart for the rest of my life. It was undeniably the luckiest day of my life, the day the absolute best thing happened to me.
+
+                As my station grew closer and time was running out, I quickly made an Instagram account right there just so I could ask for yours. I will never forget the look on your face and the way you looked back at me in that moment. That ordinary train ride became the best journey of my entire life.
+            </div>
+        </div>
+
+        <!-- STAGE 2 -->
+        <div class="card-stage" id="stage2">
+            <span class="tag">Stage 02 • Our Safe Haven</span>
+            <h2 class="card-title">Banaras</h2>
+            <div class="card-text">
+                Banaras holds a place so deep in our hearts because it’s where we always find our way back to each other. That sacred city gave us the peaceful space to truly know one another.
+
+                From our movie dates to quiet late-night walks along the Banaras ghats, every single moment felt like magic. I still smile thinking about how you reached down to hold my hand, with mine resting safely in yours—a constant reminder of how much shorter I am than you! Banaras witnessed every single one of our "firsts," and it will forever carry the warmth of our love.
+            </div>
+        </div>
+
+        <!-- STAGE 3 -->
+        <div class="card-stage" id="stage3">
+            <span class="tag">Stage 03 • My Heart & Soul</span>
+            <h2 class="card-title">Admiring You</h2>
+            <div class="card-text">
+                I will always choose to admire you. I admire the dedication and passion you put into your work, and the boundless love and care you show toward your family. 
+
+                You have been my greatest teacher and my biggest strength. I will never forget how patiently you teach me everything, pushing me to learn and constantly motivating me to become better. You’ve shaped the way I see the world. I know deep in my heart that I could never, ever love anyone else the way I love you.
+            </div>
+            
+            <div class="signature">Yours, Shivangi</div>
+
+            <div class="final-quote">
+                "And at the end of the day, who am I without my chasmish?" ❤️
+            </div>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="controls">
+            <button class="btn btn-prev" id="prevBtn" onclick="changeStage(-1)" disabled>Previous</button>
+            <button class="btn btn-next" id="nextBtn" onclick="changeStage(1)">Next Story</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStage = 1;
+        const totalStages = 3;
+
+        function changeStage(direction) {
+            // Hide current stage
+            document.getElementById(`stage${currentStage}`).classList.remove('active');
+            document.getElementById(`dot${currentStage}`).classList.remove('active');
+
+            // Calculate new stage
+            currentStage += direction;
+
+            // Show new stage
+            document.getElementById(`stage${currentStage}`).classList.add('active');
+            document.getElementById(`dot${currentStage}`).classList.add('active');
+
+            // Update button states
+            document.getElementById('prevBtn').disabled = (currentStage === 1);
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentStage === totalStages) {
+                nextBtn.innerText = "Replay Story";
+            } else {
+                nextBtn.innerText = "Next Story";
+            }
+
+            // Loop back to start if clicked replay on last stage
+            if (currentStage > totalStages) {
+                document.getElementById(`stage${totalStages}`).classList.remove('active');
+                document.getElementById(`dot${totalStages}`).classList.remove('active');
+                currentStage = 1;
+                document.getElementById(`stage${currentStage}`).classList.add('active');
+                document.getElementById(`dot${currentStage}`).classList.add('active');
+                document.getElementById('prevBtn').disabled = true;
+                nextBtn.innerText = "Next Story";
+            }
+        }
+    </script>
+</body>
+</html>
